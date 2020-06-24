@@ -1,0 +1,17 @@
+﻿.register-form > * {
+    margin-top: 10px;
+}
+
+.displayErrors input:invalid {
+    border-color: red;
+}
+
+.btn-submit {
+    background-color: #dbbb81;
+    min-width: 150px;
+    font-weight: bold;
+}
+
+    .btn-submit:hover {
+        filter: brightness(0.9);
+    }

@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SoueTestePratico.Models;
 
 namespace SoueTestePratico
 {
@@ -20,8 +22,12 @@ namespace SoueTestePratico
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddCors();
             services.AddControllersWithViews();
+            services.AddDbContext<db_soueContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("Primary"));
+            });
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -44,6 +50,10 @@ namespace SoueTestePratico
                 app.UseHsts();
             }
 
+            app.UseCors(builder =>
+            builder.AllowAnyOrigin()
+           .AllowAnyHeader()
+);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
