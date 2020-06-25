@@ -1,0 +1,6 @@
+- Modelagem do banco de dados;
+- Criação do projeto utilizando .NET Core 3.1 e React;
+- Reorganização da arquitetura do projeto React;
+- Scaffold da entidade Login;
+- Criação dos controllers;
+- Autenticação e autorização com JWT.
