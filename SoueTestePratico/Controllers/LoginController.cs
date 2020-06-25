@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoueTestePratico.Models;
@@ -77,12 +77,27 @@ namespace SoueTestePratico.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Login>> PostLogin([FromBody]Login login)
+        [AllowAnonymous]
+        public ActionResult<dynamic> PostLogin([FromBody]Login login)
         {
-            _context.Login.Add(login);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetLogin", new { id = login.Id }, login);
+            var user = _context.Login.Where(x => x.Cpf == login.Cpf.ToString()).FirstOrDefault();
+
+            if (user == null)
+                return NotFound(new { message = "Usuário inválido" });
+
+            var token = TokenService.GenerateToken(user);
+            return new
+            {
+                cpf = user.Cpf.ToString(),
+                email = user.Email.ToString(),
+                endereco = user.Adress.ToString(),
+                nome = user.Name.ToString(),
+                telefone = user.Phone.ToString(),
+                token
+
+            }; 
+
         }
 
         // DELETE: api/Login/5
